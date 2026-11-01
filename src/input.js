@@ -79,7 +79,8 @@ export class Input {
 
     // Keyboard, smoothed so tapping steers gently.
     const s = (this.any(DRIVE_KEYS.right) ? 1 : 0) - (this.any(DRIVE_KEYS.left) ? 1 : 0);
-    const rate = s === 0 ? 5 : (Math.sign(s) !== Math.sign(this.steerKey) && this.steerKey !== 0 ? 6 : 2.6);
+    // A tap gives a small correction; holding for half a second reaches full lock.
+    const rate = s === 0 ? 4 : (Math.sign(s) !== Math.sign(this.steerKey) && this.steerKey !== 0 ? 6 : 2);
     this.steerKey += Math.max(-rate * dt, Math.min(rate * dt, s - this.steerKey));
     const th = this.any(DRIVE_KEYS.throttle) ? 1 : 0;
     this.throttleKey += Math.max(-4 * dt, Math.min(4 * dt, th - this.throttleKey));

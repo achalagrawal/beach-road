@@ -51,9 +51,12 @@ export class Vehicle {
   get dir() { return this.fz < 0 ? -1 : 1; }
   get offset() { return this.x - roadX(this.z); }
 
+  // Full lock at walking pace; at speed, only as much angle as the tyres can hold
+  // (lateral grip of roughly 0.8-1g, so full steer at 80 km/h is a ~60 m turn).
   maxSteerNow() {
-    const k = 1 / (1 + (Math.abs(this.v) / 16) ** 2);
-    return this.spec.stats.steer * (0.22 + 0.78 * k);
+    const S = this.spec.stats, v = Math.abs(this.v);
+    const aLat = 5 + 5 * S.grip;
+    return Math.min(S.steer, Math.atan((aLat * this.spec.dims.wheelbase) / Math.max(v * v, 1)));
   }
 
   update(dt, c) {
@@ -62,7 +65,9 @@ export class Vehicle {
     this.brake = c.brake;
 
     const target = clamp(c.steer, -1, 1) * this.maxSteerNow();
-    this.steer += clamp(target - this.steer, -2.4 * dt, 2.4 * dt);
+    // The wheels swing to full lock in about a quarter second whatever the lock is, so they feel the same at any speed.
+    const slew = Math.max(this.maxSteerNow(), 0.05) * 4 * dt;
+    this.steer += clamp(target - this.steer, -slew, slew);
 
     let a = 0;
     if (c.throttle > 0) a += v >= -0.3 ? S.accel * c.throttle * Math.max(0, 1 - (v / this.vmax) ** 2.5) : S.brake * c.throttle;
