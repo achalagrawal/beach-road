@@ -4,9 +4,11 @@ A relaxing, endless coastal driving game that runs in the browser. Drive yoursel
 or turn on autodrive and just watch the coast go by: palm beaches, clifftop roads, pine forests,
 harbour villages, dunes and windy meadows. A generative radio plays alongside, and it never loops.
 
+**Play it at [beach-road.vercel.app](https://beach-road.vercel.app).**
+
 ![Cypress Cliffs](screenshots/game-cypress-cliffs.jpg)
 
-## Run it
+## Run it locally
 
 ```bash
 python3 serve.py
@@ -112,3 +114,12 @@ still load with `?style=toon` and `?style=watercolor`; their stills are in `scre
 
 In the browser console, `beachRoad.bench(60)` gives the average milliseconds per frame. `beachRoad.travelTo('village')`
 jumps to a region, and `beachRoad.sim(600)` fast-forwards ten seconds.
+
+## Contributing
+
+Issues and pull requests are welcome. There's no build step: clone, run `python3 serve.py`, edit, reload.
+Every push to `main` deploys to [beach-road.vercel.app](https://beach-road.vercel.app), and pull requests get a Vercel preview.
+
+## License
+
+[MIT](LICENSE)
